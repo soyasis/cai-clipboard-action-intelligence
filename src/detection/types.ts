@@ -1,3 +1,5 @@
+import { ReactElement } from "react";
+
 export type ContentType = "word" | "short" | "long" | "meeting" | "address" | "url" | "json";
 
 export interface ContentResult {
@@ -18,5 +20,6 @@ export interface ActionItem {
   subtitle?: string;
   icon: string;
   shortcut: number; // 1-9
-  execute: () => Promise<void>;
+  execute?: () => Promise<void>;
+  component?: ReactElement; // For navigation-based actions
 }
