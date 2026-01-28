@@ -80,7 +80,7 @@ export function ActionList({ text, detection, source }: Props) {
         <List.Section title="More Options">
           <List.Item
             icon="🌐"
-            title="Translate to Other Language..."
+            title="Translate to other language..."
             subtitle="Enter any language name"
             actions={
               <ActionPanel>
