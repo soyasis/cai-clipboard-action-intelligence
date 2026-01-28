@@ -233,7 +233,7 @@
       "title": "Custom Action Prompt (⌘1)",
       "description": "Your custom AI instruction (e.g., 'Proofread selected text', 'Create email reply', 'Count words', 'convert to python list'). Always accessible via ⌘1",
       "type": "textfield",
-      "default": "Improve the writing and fix any grammar or spelling errors",
+      "default": "Use a custom prompt",
       "required": false
     }
   ],
