@@ -1,0 +1,369 @@
+import { Clipboard, showToast, Toast, open } from "@raycast/api";
+import { ContentResult } from "../detection/types";
+import { LLMStatus } from "../services/llm";
+import { summarize, translate, define } from "../services/llm";
+import { searchWeb, searchWikipedia } from "./search";
+import { openInMaps } from "./maps";
+import { createCalendarEvent } from "./calendar";
+import { ActionItem } from "../detection/types";
+
+/**
+ * Get actions for detected content
+ */
+export function getActionsForContent(
+  text: string,
+  detection: ContentResult,
+  llmStatus: LLMStatus | null,
+): ActionItem[] {
+  const actions: ActionItem[] = [];
+
+  switch (detection.type) {
+    case "word":
+      actions.push(...getWordActions(text, llmStatus));
+      break;
+    case "short":
+      actions.push(...getShortTextActions(text, llmStatus));
+      break;
+    case "long":
+      actions.push(...getLongTextActions(text, llmStatus));
+      break;
+    case "meeting":
+      actions.push(...getMeetingActions(text, detection, llmStatus));
+      break;
+    case "address":
+      actions.push(...getAddressActions(text));
+      break;
+    case "url":
+      actions.push(...getUrlActions(text));
+      break;
+    case "json":
+      actions.push(...getJsonActions(text));
+      break;
+  }
+
+  return actions;
+}
+
+function getWordActions(text: string, llmStatus: LLMStatus | null): ActionItem[] {
+  const actions: ActionItem[] = [];
+
+  // Define (if LLM available)
+  if (llmStatus?.running) {
+    actions.push({
+      id: "define",
+      title: "Define Word",
+      subtitle: `Get definition of "${text}"`,
+      icon: "📖",
+      shortcut: actions.length + 1,
+      execute: async () => {
+        const toast = await showToast({ style: Toast.Style.Animated, title: "Defining..." });
+        try {
+          const definition = await define(text);
+          await Clipboard.copy(definition);
+          toast.style = Toast.Style.Success;
+          toast.title = "Definition copied!";
+        } catch (error) {
+          toast.style = Toast.Style.Failure;
+          toast.title = "Failed to define";
+        }
+      },
+    });
+  }
+
+  // Translate
+  if (llmStatus?.running) {
+    const languages = ["Spanish", "French", "German", "Japanese"];
+    languages.forEach((lang) => {
+      actions.push({
+        id: `translate-${lang.toLowerCase()}`,
+        title: `Translate to ${lang}`,
+        icon: "🌍",
+        shortcut: actions.length + 1,
+        execute: async () => {
+          const toast = await showToast({ style: Toast.Style.Animated, title: "Translating..." });
+          try {
+            const translation = await translate(text, lang);
+            await Clipboard.copy(translation);
+            toast.style = Toast.Style.Success;
+            toast.title = `Translated to ${lang}`;
+          } catch (error) {
+            toast.style = Toast.Style.Failure;
+            toast.title = "Translation failed";
+          }
+        },
+      });
+    });
+  }
+
+  // Search Web
+  actions.push({
+    id: "search-web",
+    title: "Search Web",
+    icon: "🔍",
+    shortcut: actions.length + 1,
+    execute: async () => {
+      await searchWeb(text);
+    },
+  });
+
+  return actions;
+}
+
+function getShortTextActions(text: string, llmStatus: LLMStatus | null): ActionItem[] {
+  const actions: ActionItem[] = [];
+
+  // Translate
+  if (llmStatus?.running) {
+    const languages = ["Spanish", "French", "German"];
+    languages.forEach((lang) => {
+      actions.push({
+        id: `translate-${lang.toLowerCase()}`,
+        title: `Translate to ${lang}`,
+        icon: "🌍",
+        shortcut: actions.length + 1,
+        execute: async () => {
+          const toast = await showToast({ style: Toast.Style.Animated, title: "Translating..." });
+          try {
+            const translation = await translate(text, lang);
+            await Clipboard.copy(translation);
+            toast.style = Toast.Style.Success;
+            toast.title = `Translated to ${lang}`;
+          } catch (error) {
+            toast.style = Toast.Style.Failure;
+            toast.title = "Translation failed";
+          }
+        },
+      });
+    });
+  }
+
+  // Search Web
+  actions.push({
+    id: "search-web",
+    title: "Search Web",
+    icon: "🔍",
+    shortcut: actions.length + 1,
+    execute: async () => {
+      await searchWeb(text);
+    },
+  });
+
+  // Search Wikipedia
+  actions.push({
+    id: "search-wikipedia",
+    title: "Search Wikipedia",
+    icon: "📚",
+    shortcut: actions.length + 1,
+    execute: async () => {
+      await searchWikipedia(text);
+    },
+  });
+
+  return actions;
+}
+
+function getLongTextActions(text: string, llmStatus: LLMStatus | null): ActionItem[] {
+  const actions: ActionItem[] = [];
+
+  // Summarize (if LLM available)
+  if (llmStatus?.running) {
+    actions.push({
+      id: "summarize",
+      title: "Summarize",
+      subtitle: "Get 2-3 sentence summary",
+      icon: "📝",
+      shortcut: actions.length + 1,
+      execute: async () => {
+        const toast = await showToast({ style: Toast.Style.Animated, title: "Summarizing..." });
+        try {
+          const summary = await summarize(text);
+          await Clipboard.copy(summary);
+          toast.style = Toast.Style.Success;
+          toast.title = "Summary copied!";
+        } catch (error) {
+          toast.style = Toast.Style.Failure;
+          toast.title = "Summarization failed";
+        }
+      },
+    });
+  }
+
+  // Translate
+  if (llmStatus?.running) {
+    actions.push({
+      id: "translate-spanish",
+      title: "Translate to Spanish",
+      icon: "🌍",
+      shortcut: actions.length + 1,
+      execute: async () => {
+        const toast = await showToast({ style: Toast.Style.Animated, title: "Translating..." });
+        try {
+          const translation = await translate(text, "Spanish");
+          await Clipboard.copy(translation);
+          toast.style = Toast.Style.Success;
+          toast.title = "Translated to Spanish";
+        } catch (error) {
+          toast.style = Toast.Style.Failure;
+          toast.title = "Translation failed";
+        }
+      },
+    });
+  }
+
+  // Search Web
+  actions.push({
+    id: "search-web",
+    title: "Search Web",
+    icon: "🔍",
+    shortcut: actions.length + 1,
+    execute: async () => {
+      await searchWeb(text);
+    },
+  });
+
+  return actions;
+}
+
+function getMeetingActions(text: string, detection: ContentResult, llmStatus: LLMStatus | null): ActionItem[] {
+  const actions: ActionItem[] = [];
+
+  // Create Calendar Event
+  actions.push({
+    id: "calendar",
+    title: "Create Calendar Event",
+    subtitle: detection.entities.dateText,
+    icon: "📅",
+    shortcut: actions.length + 1,
+    execute: async () => {
+      await createCalendarEvent(text, detection);
+    },
+  });
+
+  // Open in Maps (if location detected)
+  if (detection.entities.location) {
+    actions.push({
+      id: "maps",
+      title: "Open in Maps",
+      subtitle: detection.entities.location,
+      icon: "📍",
+      shortcut: actions.length + 1,
+      execute: async () => {
+        await openInMaps(detection.entities.location!);
+      },
+    });
+  }
+
+  // Search Web
+  actions.push({
+    id: "search-web",
+    title: "Search Web",
+    icon: "🔍",
+    shortcut: actions.length + 1,
+    execute: async () => {
+      await searchWeb(text);
+    },
+  });
+
+  return actions;
+}
+
+function getAddressActions(text: string): ActionItem[] {
+  return [
+    {
+      id: "maps",
+      title: "Open in Maps",
+      icon: "📍",
+      shortcut: 1,
+      execute: async () => {
+        await openInMaps(text);
+      },
+    },
+    {
+      id: "copy",
+      title: "Copy Address",
+      icon: "📋",
+      shortcut: 2,
+      execute: async () => {
+        await Clipboard.copy(text);
+        await showToast({ style: Toast.Style.Success, title: "Address copied" });
+      },
+    },
+    {
+      id: "search-web",
+      title: "Search Web",
+      icon: "🔍",
+      shortcut: 3,
+      execute: async () => {
+        await searchWeb(text);
+      },
+    },
+  ];
+}
+
+function getUrlActions(text: string): ActionItem[] {
+  return [
+    {
+      id: "open",
+      title: "Open in Browser",
+      icon: "🌐",
+      shortcut: 1,
+      execute: async () => {
+        const url = text.match(/https?:\/\/[^\s]+/)?.[0];
+        if (url) {
+          await open(url);
+        }
+      },
+    },
+    {
+      id: "copy-markdown",
+      title: "Copy as Markdown",
+      subtitle: `[Link](${text})`,
+      icon: "📋",
+      shortcut: 2,
+      execute: async () => {
+        await Clipboard.copy(`[Link](${text})`);
+        await showToast({ style: Toast.Style.Success, title: "Markdown link copied" });
+      },
+    },
+    {
+      id: "search-web",
+      title: "Search Web",
+      icon: "🔍",
+      shortcut: 3,
+      execute: async () => {
+        await searchWeb(text);
+      },
+    },
+  ];
+}
+
+function getJsonActions(text: string): ActionItem[] {
+  return [
+    {
+      id: "pretty-print",
+      title: "Pretty Print JSON",
+      icon: "✨",
+      shortcut: 1,
+      execute: async () => {
+        try {
+          const parsed = JSON.parse(text);
+          const pretty = JSON.stringify(parsed, null, 2);
+          await Clipboard.copy(pretty);
+          await showToast({ style: Toast.Style.Success, title: "Formatted JSON copied" });
+        } catch (error) {
+          await showToast({ style: Toast.Style.Failure, title: "Invalid JSON" });
+        }
+      },
+    },
+    {
+      id: "copy",
+      title: "Copy JSON",
+      icon: "📋",
+      shortcut: 2,
+      execute: async () => {
+        await Clipboard.copy(text);
+        await showToast({ style: Toast.Style.Success, title: "JSON copied" });
+      },
+    },
+  ];
+}
