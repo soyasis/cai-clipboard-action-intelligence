@@ -1,11 +1,18 @@
-import { Clipboard, showToast, Toast, open } from "@raycast/api";
+import { Clipboard, showToast, Toast, open, getPreferenceValues } from "@raycast/api";
+import { createElement } from "react";
 import { ContentResult } from "../detection/types";
 import { LLMStatus } from "../services/llm";
-import { summarize, translate, define } from "../services/llm";
+import { summarize, translate, define, explain } from "../services/llm";
 import { searchWeb, searchWikipedia } from "./search";
 import { openInMaps } from "./maps";
 import { createCalendarEvent } from "./calendar";
 import { ActionItem } from "../detection/types";
+import { AIResultView } from "../components/AIResultView";
+
+interface Preferences {
+  translationLanguage1: string;
+  translationLanguage2: string;
+}
 
 /**
  * Get actions for detected content
@@ -55,24 +62,35 @@ function getWordActions(text: string, llmStatus: LLMStatus | null): ActionItem[]
       subtitle: `Get definition of "${text}"`,
       icon: "📖",
       shortcut: actions.length + 1,
-      execute: async () => {
-        const toast = await showToast({ style: Toast.Style.Animated, title: "Defining..." });
-        try {
-          const definition = await define(text);
-          await Clipboard.copy(definition);
-          toast.style = Toast.Style.Success;
-          toast.title = "Definition copied!";
-        } catch {
-          toast.style = Toast.Style.Failure;
-          toast.title = "Failed to define";
-        }
-      },
+      component: createElement(AIResultView, {
+        title: `Definition: ${text}`,
+        text: text,
+        generator: define,
+        loadingMessage: "Defining",
+      }),
+    });
+
+    // Explain
+    actions.push({
+      id: "explain",
+      title: "Explain",
+      subtitle: `Get detailed explanation of "${text}"`,
+      icon: "💡",
+      shortcut: actions.length + 1,
+      component: createElement(AIResultView, {
+        title: `Explanation: ${text}`,
+        text: text,
+        generator: explain,
+        loadingMessage: "Explaining",
+      }),
     });
   }
 
   // Translate
   if (llmStatus?.running) {
-    const languages = ["Spanish", "French", "German", "Japanese"];
+    const { translationLanguage1, translationLanguage2 } = getPreferenceValues<Preferences>();
+    const languages = [translationLanguage1, translationLanguage2];
+
     languages.forEach((lang) => {
       actions.push({
         id: `translate-${lang.toLowerCase()}`,
@@ -93,6 +111,7 @@ function getWordActions(text: string, llmStatus: LLMStatus | null): ActionItem[]
         },
       });
     });
+
   }
 
   // Search Web
@@ -111,6 +130,23 @@ function getWordActions(text: string, llmStatus: LLMStatus | null): ActionItem[]
 
 function getShortTextActions(text: string, llmStatus: LLMStatus | null): ActionItem[] {
   const actions: ActionItem[] = [];
+
+  // Explain
+  if (llmStatus?.running) {
+    actions.push({
+      id: "explain",
+      title: "Explain",
+      subtitle: `Get detailed explanation`,
+      icon: "💡",
+      shortcut: actions.length + 1,
+      component: createElement(AIResultView, {
+        title: `Explanation: ${text.substring(0, 50)}${text.length > 50 ? "..." : ""}`,
+        text: text,
+        generator: explain,
+        loadingMessage: "Explaining",
+      }),
+    });
+  }
 
   // Translate
   if (llmStatus?.running) {
