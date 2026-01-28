@@ -127,6 +127,46 @@
         }
       ],
       "required": false
+    },
+    {
+      "name": "translationLanguage1",
+      "title": "Translation Language 1",
+      "description": "First preferred language for quick translations",
+      "type": "dropdown",
+      "default": "Spanish",
+      "data": [
+        { "title": "Spanish", "value": "Spanish" },
+        { "title": "French", "value": "French" },
+        { "title": "German", "value": "German" },
+        { "title": "Italian", "value": "Italian" },
+        { "title": "Portuguese", "value": "Portuguese" },
+        { "title": "Chinese", "value": "Chinese" },
+        { "title": "Japanese", "value": "Japanese" },
+        { "title": "Korean", "value": "Korean" },
+        { "title": "Russian", "value": "Russian" },
+        { "title": "Arabic", "value": "Arabic" }
+      ],
+      "required": false
+    },
+    {
+      "name": "translationLanguage2",
+      "title": "Translation Language 2",
+      "description": "Second preferred language for quick translations",
+      "type": "dropdown",
+      "default": "French",
+      "data": [
+        { "title": "Spanish", "value": "Spanish" },
+        { "title": "French", "value": "French" },
+        { "title": "German", "value": "German" },
+        { "title": "Italian", "value": "Italian" },
+        { "title": "Portuguese", "value": "Portuguese" },
+        { "title": "Chinese", "value": "Chinese" },
+        { "title": "Japanese", "value": "Japanese" },
+        { "title": "Korean", "value": "Korean" },
+        { "title": "Russian", "value": "Russian" },
+        { "title": "Arabic", "value": "Arabic" }
+      ],
+      "required": false
     }
   ],
   "dependencies": {
