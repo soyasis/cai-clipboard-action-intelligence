@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { ContentResult, ContentType } from "../detection/types";
 import { checkLLM, LLMStatus } from "../services/llm";
 import { getActionsForContent } from "../actions";
+import { TranslateForm } from "./TranslateForm";
 
 interface Props {
   text: string;
@@ -54,17 +55,41 @@ export function ActionList({ text, detection, source }: Props) {
             accessories={[{ text: `⌘${index + 1}` }]}
             actions={
               <ActionPanel>
-                <Action
-                  title={action.title}
-                  icon={action.icon}
-                  onAction={action.execute}
-                  shortcut={{ modifiers: ["cmd"], key: (index + 1).toString() as "1" }}
-                />
+                {action.component ? (
+                  <Action.Push
+                    title={action.title}
+                    icon={action.icon}
+                    target={action.component}
+                    shortcut={{ modifiers: ["cmd"], key: (index + 1).toString() as "1" }}
+                  />
+                ) : (
+                  <Action
+                    title={action.title}
+                    icon={action.icon}
+                    onAction={action.execute!}
+                    shortcut={{ modifiers: ["cmd"], key: (index + 1).toString() as "1" }}
+                  />
+                )}
               </ActionPanel>
             }
           />
         ))}
       </List.Section>
+
+      {llmStatus?.running && (
+        <List.Section title="More Options">
+          <List.Item
+            icon="🌐"
+            title="Translate to Other Language..."
+            subtitle="Enter any language name"
+            actions={
+              <ActionPanel>
+                <Action.Push title="Translate to Other Language" target={<TranslateForm text={text} />} />
+              </ActionPanel>
+            }
+          />
+        </List.Section>
+      )}
 
       {!llmStatus?.running && (
         <List.Section title="⚠️ Local LLM not available">
