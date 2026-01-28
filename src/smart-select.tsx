@@ -43,7 +43,7 @@ export default function SmartSelect() {
           setDetection(result);
           setIsLoading(false);
         }
-      } catch (err) {
+      } catch {
         setError("Failed to process text");
         setIsLoading(false);
       }
@@ -57,7 +57,11 @@ export default function SmartSelect() {
   }
 
   if (error || !detection) {
-    return <List><List.EmptyView title={error || "Failed to process"} /></List>;
+    return (
+      <List>
+        <List.EmptyView title={error || "Failed to process"} />
+      </List>
+    );
   }
 
   return <ActionList text={text} detection={detection} source={source} />;
