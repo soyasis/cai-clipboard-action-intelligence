@@ -1,8 +1,13 @@
-import { Action, ActionPanel, List, openExtensionPreferences } from "@raycast/api";
+import { Action, ActionPanel, List, openExtensionPreferences, getPreferenceValues } from "@raycast/api";
 import { useState, useEffect } from "react";
 import { ContentResult, ContentType } from "../detection/types";
 import { checkLLM, LLMStatus } from "../services/llm";
 import { getActionsForContent } from "../actions";
+import { CustomActionForm } from "./CustomActionForm";
+
+interface Preferences {
+  customActionPrompt: string;
+}
 
 interface Props {
   text: string;
@@ -39,40 +44,69 @@ export function ActionList({ text, detection, source }: Props) {
     json: "{ }",
   };
 
+  const { customActionPrompt } = getPreferenceValues<Preferences>();
+
   return (
     <List>
       <List.Section
         title={`${typeIcons[detection.type]} ${typeLabels[detection.type]} detected`}
         subtitle={source === "selection" ? "from selection" : "from clipboard"}
       >
-        {actions.map((action, index) => (
+        {/* Custom Action - always first with ⌘1 */}
+        {llmStatus?.running && customActionPrompt && customActionPrompt.trim() && (
           <List.Item
-            key={action.id}
-            icon={action.icon}
-            title={action.title}
-            subtitle={action.subtitle}
-            accessories={[{ text: `⌘${index + 1}` }]}
+            icon="⚡"
+            title="Custom Action"
+            subtitle={customActionPrompt.substring(0, 60) + (customActionPrompt.length > 60 ? "..." : "")}
+            accessories={[{ text: "⌘1" }]}
             actions={
               <ActionPanel>
-                {action.component ? (
-                  <Action.Push
-                    title={action.title}
-                    icon={action.icon}
-                    target={action.component}
-                    shortcut={{ modifiers: ["cmd"], key: (index + 1).toString() as "1" }}
-                  />
-                ) : (
-                  <Action
-                    title={action.title}
-                    icon={action.icon}
-                    onAction={action.execute!}
-                    shortcut={{ modifiers: ["cmd"], key: (index + 1).toString() as "1" }}
-                  />
-                )}
+                <Action.Push
+                  title="Custom Action"
+                  icon="⚡"
+                  target={<CustomActionForm text={text} />}
+                  shortcut={{ modifiers: ["cmd"], key: "1" }}
+                />
               </ActionPanel>
             }
           />
-        ))}
+        )}
+
+        {/* Content-specific actions - start from ⌘2 if custom action exists */}
+        {actions.map((action) => {
+          const hasCustomAction = llmStatus?.running && customActionPrompt && customActionPrompt.trim();
+          const displayShortcut = hasCustomAction ? action.shortcut + 1 : action.shortcut;
+          const actualShortcut = hasCustomAction ? action.shortcut + 1 : action.shortcut;
+
+          return (
+            <List.Item
+              key={action.id}
+              icon={action.icon}
+              title={action.title}
+              subtitle={action.subtitle}
+              accessories={[{ text: `⌘${displayShortcut}` }]}
+              actions={
+                <ActionPanel>
+                  {action.component ? (
+                    <Action.Push
+                      title={action.title}
+                      icon={action.icon}
+                      target={action.component}
+                      shortcut={{ modifiers: ["cmd"], key: actualShortcut.toString() as "1" }}
+                    />
+                  ) : (
+                    <Action
+                      title={action.title}
+                      icon={action.icon}
+                      onAction={action.execute!}
+                      shortcut={{ modifiers: ["cmd"], key: actualShortcut.toString() as "1" }}
+                    />
+                  )}
+                </ActionPanel>
+              }
+            />
+          );
+        })}
       </List.Section>
 
       {!llmStatus?.running && (
@@ -89,22 +123,6 @@ export function ActionList({ text, detection, source }: Props) {
           />
         </List.Section>
       )}
-
-      <List.Section title="Always available">
-        <List.Item
-          icon="📋"
-          title="Copy as plain text"
-          accessories={[{ text: `⌘${actions.length + 1}` }]}
-          actions={
-            <ActionPanel>
-              <Action.CopyToClipboard
-                content={text}
-                shortcut={{ modifiers: ["cmd"], key: (actions.length + 1).toString() as "1" }}
-              />
-            </ActionPanel>
-          }
-        />
-      </List.Section>
     </List>
   );
 }

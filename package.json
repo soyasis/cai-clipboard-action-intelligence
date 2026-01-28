@@ -135,16 +135,46 @@
       "type": "dropdown",
       "default": "Spanish",
       "data": [
-        { "title": "Spanish", "value": "Spanish" },
-        { "title": "French", "value": "French" },
-        { "title": "German", "value": "German" },
-        { "title": "Italian", "value": "Italian" },
-        { "title": "Portuguese", "value": "Portuguese" },
-        { "title": "Chinese", "value": "Chinese" },
-        { "title": "Japanese", "value": "Japanese" },
-        { "title": "Korean", "value": "Korean" },
-        { "title": "Russian", "value": "Russian" },
-        { "title": "Arabic", "value": "Arabic" }
+        {
+          "title": "Spanish",
+          "value": "Spanish"
+        },
+        {
+          "title": "French",
+          "value": "French"
+        },
+        {
+          "title": "German",
+          "value": "German"
+        },
+        {
+          "title": "Italian",
+          "value": "Italian"
+        },
+        {
+          "title": "Portuguese",
+          "value": "Portuguese"
+        },
+        {
+          "title": "Chinese",
+          "value": "Chinese"
+        },
+        {
+          "title": "Japanese",
+          "value": "Japanese"
+        },
+        {
+          "title": "Korean",
+          "value": "Korean"
+        },
+        {
+          "title": "Russian",
+          "value": "Russian"
+        },
+        {
+          "title": "Arabic",
+          "value": "Arabic"
+        }
       ],
       "required": false
     },
@@ -155,17 +185,55 @@
       "type": "dropdown",
       "default": "French",
       "data": [
-        { "title": "Spanish", "value": "Spanish" },
-        { "title": "French", "value": "French" },
-        { "title": "German", "value": "German" },
-        { "title": "Italian", "value": "Italian" },
-        { "title": "Portuguese", "value": "Portuguese" },
-        { "title": "Chinese", "value": "Chinese" },
-        { "title": "Japanese", "value": "Japanese" },
-        { "title": "Korean", "value": "Korean" },
-        { "title": "Russian", "value": "Russian" },
-        { "title": "Arabic", "value": "Arabic" }
+        {
+          "title": "Spanish",
+          "value": "Spanish"
+        },
+        {
+          "title": "French",
+          "value": "French"
+        },
+        {
+          "title": "German",
+          "value": "German"
+        },
+        {
+          "title": "Italian",
+          "value": "Italian"
+        },
+        {
+          "title": "Portuguese",
+          "value": "Portuguese"
+        },
+        {
+          "title": "Chinese",
+          "value": "Chinese"
+        },
+        {
+          "title": "Japanese",
+          "value": "Japanese"
+        },
+        {
+          "title": "Korean",
+          "value": "Korean"
+        },
+        {
+          "title": "Russian",
+          "value": "Russian"
+        },
+        {
+          "title": "Arabic",
+          "value": "Arabic"
+        }
       ],
+      "required": false
+    },
+    {
+      "name": "customActionPrompt",
+      "title": "Custom Action Prompt (⌘1)",
+      "description": "Your custom AI instruction (e.g., 'Proofread selected text', 'Create email reply', 'Count words', 'convert to python list'). Always accessible via ⌘1",
+      "type": "textfield",
+      "default": "Improve the writing and fix any grammar or spelling errors",
       "required": false
     }
   ],

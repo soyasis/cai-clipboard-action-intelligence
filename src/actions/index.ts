@@ -54,6 +54,7 @@ export function getActionsForContent(
 
 function getWordActions(text: string, llmStatus: LLMStatus | null): ActionItem[] {
   const actions: ActionItem[] = [];
+  let shortcutNumber = 1;
 
   // Define (if LLM available)
   if (llmStatus?.running) {
@@ -62,7 +63,7 @@ function getWordActions(text: string, llmStatus: LLMStatus | null): ActionItem[]
       title: "Define Word",
       subtitle: `Get definition of "${text}"`,
       icon: "📖",
-      shortcut: actions.length + 1,
+      shortcut: shortcutNumber++,
       component: createElement(AIResultView, {
         title: `Definition: ${text}`,
         text: text,
@@ -77,7 +78,7 @@ function getWordActions(text: string, llmStatus: LLMStatus | null): ActionItem[]
       title: "Explain",
       subtitle: `Get detailed explanation of "${text}"`,
       icon: "💡",
-      shortcut: actions.length + 1,
+      shortcut: shortcutNumber++,
       component: createElement(AIResultView, {
         title: `Explanation: ${text}`,
         text: text,
@@ -97,7 +98,7 @@ function getWordActions(text: string, llmStatus: LLMStatus | null): ActionItem[]
         id: `translate-${lang.toLowerCase()}`,
         title: `Translate to ${lang}`,
         icon: "🌍",
-        shortcut: actions.length + 1,
+        shortcut: shortcutNumber++,
         component: createElement(AIResultView, {
           title: `Translation to ${lang}`,
           text: text,
@@ -113,7 +114,7 @@ function getWordActions(text: string, llmStatus: LLMStatus | null): ActionItem[]
       title: "Translate to other language...",
       subtitle: "Enter any language name",
       icon: "🌐",
-      shortcut: actions.length + 1,
+      shortcut: shortcutNumber++,
       component: createElement(TranslateForm, { text }),
     });
   }
@@ -123,7 +124,7 @@ function getWordActions(text: string, llmStatus: LLMStatus | null): ActionItem[]
     id: "search-web",
     title: "Search Web",
     icon: "🔍",
-    shortcut: actions.length + 1,
+    shortcut: shortcutNumber++,
     execute: async () => {
       await searchWeb(text);
     },
@@ -134,6 +135,7 @@ function getWordActions(text: string, llmStatus: LLMStatus | null): ActionItem[]
 
 function getShortTextActions(text: string, llmStatus: LLMStatus | null): ActionItem[] {
   const actions: ActionItem[] = [];
+  let shortcutNumber = 1;
 
   // Explain
   if (llmStatus?.running) {
@@ -142,7 +144,7 @@ function getShortTextActions(text: string, llmStatus: LLMStatus | null): ActionI
       title: "Explain",
       subtitle: `Get detailed explanation`,
       icon: "💡",
-      shortcut: actions.length + 1,
+      shortcut: shortcutNumber++,
       component: createElement(AIResultView, {
         title: `Explanation: ${text.substring(0, 50)}${text.length > 50 ? "..." : ""}`,
         text: text,
@@ -162,7 +164,7 @@ function getShortTextActions(text: string, llmStatus: LLMStatus | null): ActionI
         id: `translate-${lang.toLowerCase()}`,
         title: `Translate to ${lang}`,
         icon: "🌍",
-        shortcut: actions.length + 1,
+        shortcut: shortcutNumber++,
         component: createElement(AIResultView, {
           title: `Translation to ${lang}`,
           text: text,
@@ -178,7 +180,7 @@ function getShortTextActions(text: string, llmStatus: LLMStatus | null): ActionI
       title: "Translate to other language...",
       subtitle: "Enter any language name",
       icon: "🌐",
-      shortcut: actions.length + 1,
+      shortcut: shortcutNumber++,
       component: createElement(TranslateForm, { text }),
     });
   }
@@ -188,7 +190,7 @@ function getShortTextActions(text: string, llmStatus: LLMStatus | null): ActionI
     id: "search-web",
     title: "Search Web",
     icon: "🔍",
-    shortcut: actions.length + 1,
+    shortcut: shortcutNumber++,
     execute: async () => {
       await searchWeb(text);
     },
@@ -199,7 +201,7 @@ function getShortTextActions(text: string, llmStatus: LLMStatus | null): ActionI
     id: "search-wikipedia",
     title: "Search Wikipedia",
     icon: "📚",
-    shortcut: actions.length + 1,
+    shortcut: shortcutNumber++,
     execute: async () => {
       await searchWikipedia(text);
     },
@@ -210,6 +212,7 @@ function getShortTextActions(text: string, llmStatus: LLMStatus | null): ActionI
 
 function getLongTextActions(text: string, llmStatus: LLMStatus | null): ActionItem[] {
   const actions: ActionItem[] = [];
+  let shortcutNumber = 1;
 
   // Summarize (if LLM available)
   if (llmStatus?.running) {
@@ -218,7 +221,7 @@ function getLongTextActions(text: string, llmStatus: LLMStatus | null): ActionIt
       title: "Summarize",
       subtitle: "Get 2-3 sentence summary",
       icon: "📝",
-      shortcut: actions.length + 1,
+      shortcut: shortcutNumber++,
       component: createElement(AIResultView, {
         title: "Summary",
         text: text,
@@ -230,18 +233,32 @@ function getLongTextActions(text: string, llmStatus: LLMStatus | null): ActionIt
 
   // Translate
   if (llmStatus?.running) {
-    const { translationLanguage1 } = getPreferenceValues<Preferences>();
+    const { translationLanguage1, translationLanguage2 } = getPreferenceValues<Preferences>();
+    const languages = [translationLanguage1, translationLanguage2];
+
+    languages.forEach((lang) => {
+      actions.push({
+        id: `translate-${lang.toLowerCase()}`,
+        title: `Translate to ${lang}`,
+        icon: "🌍",
+        shortcut: shortcutNumber++,
+        component: createElement(AIResultView, {
+          title: `Translation to ${lang}`,
+          text: text,
+          generator: (text: string) => translate(text, lang),
+          loadingMessage: `Translating to ${lang}`,
+        }),
+      });
+    });
+
+    // Add "Translate to other language" option
     actions.push({
-      id: "translate-preferred",
-      title: `Translate to ${translationLanguage1}`,
-      icon: "🌍",
-      shortcut: actions.length + 1,
-      component: createElement(AIResultView, {
-        title: `Translation to ${translationLanguage1}`,
-        text: text,
-        generator: (text: string) => translate(text, translationLanguage1),
-        loadingMessage: `Translating to ${translationLanguage1}`,
-      }),
+      id: "translate-other",
+      title: "Translate to other language...",
+      subtitle: "Enter any language name",
+      icon: "🌐",
+      shortcut: shortcutNumber++,
+      component: createElement(TranslateForm, { text }),
     });
   }
 
@@ -250,7 +267,7 @@ function getLongTextActions(text: string, llmStatus: LLMStatus | null): ActionIt
     id: "search-web",
     title: "Search Web",
     icon: "🔍",
-    shortcut: actions.length + 1,
+    shortcut: shortcutNumber++,
     execute: async () => {
       await searchWeb(text);
     },
@@ -261,6 +278,7 @@ function getLongTextActions(text: string, llmStatus: LLMStatus | null): ActionIt
 
 function getMeetingActions(text: string, detection: ContentResult): ActionItem[] {
   const actions: ActionItem[] = [];
+  let shortcutNumber = 1;
 
   // Create Calendar Event
   actions.push({
@@ -268,7 +286,7 @@ function getMeetingActions(text: string, detection: ContentResult): ActionItem[]
     title: "Create Calendar Event",
     subtitle: detection.entities.dateText,
     icon: "📅",
-    shortcut: actions.length + 1,
+    shortcut: shortcutNumber++,
     execute: async () => {
       await createCalendarEvent(text, detection);
     },
@@ -281,7 +299,7 @@ function getMeetingActions(text: string, detection: ContentResult): ActionItem[]
       title: "Open in Maps",
       subtitle: detection.entities.location,
       icon: "📍",
-      shortcut: actions.length + 1,
+      shortcut: shortcutNumber++,
       execute: async () => {
         await openInMaps(detection.entities.location!);
       },
@@ -293,7 +311,7 @@ function getMeetingActions(text: string, detection: ContentResult): ActionItem[]
     id: "search-web",
     title: "Search Web",
     icon: "🔍",
-    shortcut: actions.length + 1,
+    shortcut: shortcutNumber++,
     execute: async () => {
       await searchWeb(text);
     },

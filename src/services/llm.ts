@@ -144,3 +144,17 @@ Keep it clear and easy to understand.`;
 
   return generate(prompt);
 }
+
+/**
+ * Execute a custom action on text using the local LLM
+ */
+export async function customAction(text: string, instruction: string): Promise<string> {
+  const prompt = `${instruction}
+
+Text:
+${text}
+
+Output:`;
+
+  return generate(prompt);
+}
