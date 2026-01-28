@@ -74,6 +74,36 @@
       "placeholder": "Leave empty for default"
     },
     {
+      "name": "preferredSearchEngine",
+      "title": "Preferred Search Engine",
+      "description": "Which search engine to use for web searches",
+      "type": "dropdown",
+      "default": "brave",
+      "data": [
+        {
+          "title": "Brave Search",
+          "value": "brave"
+        },
+        {
+          "title": "DuckDuckGo",
+          "value": "duckduckgo"
+        },
+        {
+          "title": "Google",
+          "value": "google"
+        },
+        {
+          "title": "Bing",
+          "value": "bing"
+        },
+        {
+          "title": "Ecosia",
+          "value": "ecosia"
+        }
+      ],
+      "required": false
+    },
+    {
       "name": "preferredMaps",
       "title": "Preferred Maps App",
       "description": "Which maps app to open addresses in",
