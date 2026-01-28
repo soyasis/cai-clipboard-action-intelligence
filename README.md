@@ -9,10 +9,11 @@ A privacy-friendly, AI-powered clipboard assistant that analyzes copied content 
 ## ✨ Features
 
 - 🔍 **Smart Content Detection**: Automatically identifies words, meetings, addresses, URLs, JSON, and more
-- 🤖 **AI-Powered Actions**: Define words, translate text, summarize articles using local LLMs
+- 🤖 **AI-Powered Actions**: Define words, explain concepts, translate text, summarize articles using local LLMs
+- ⚡ **Custom Action (⌘1)**: Create your own AI action accessible via keyboard shortcut
+- 🌍 **Flexible Translation**: Support for 10+ languages with custom language input
 - 🗓️ **Quick Calendar Events**: Detect dates and create calendar events instantly
 - 🗺️ **Location Actions**: Open addresses in Apple Maps or Google Maps
-- 🌍 **Multi-Language**: International address support (Spanish, French, German, Italian, Portuguese, Dutch)
 - 🔒 **Privacy-First**: All AI processing happens locally - no cloud, no tracking
 - ⚡ **Fast & Lightweight**: Instant analysis with minimal resource usage
 
@@ -51,11 +52,11 @@ Select some text, trigger command and get suggested relevant actions.
 
 **Examples:**
 
-- Copy `"serendipity"` → Get definition, translations, web search
-- Copy `"Let's meet Tuesday at 3pm at Starbucks"` → Create calendar event, open in maps
-- Copy `"123 Main St, NYC 10001"` → Open in maps, copy formatted
-- Copy `https://github.com/...` → Open in browser, copy as markdown
-- Copy `{"name":"John"}` → Pretty print JSON, copy formatted
+- Select `"serendipity"` → ⌘1 for custom action, ⌘2 to define, ⌘3 to explain, ⌘4-6 to translate
+- Select `"Let's meet Tuesday at 3pm at Starbucks"` → Create calendar event, open in maps
+- Select `"123 Main St, NYC 10001"` → Open in maps, copy formatted
+- Select `https://github.com/...` → Open in browser, copy as markdown
+- Select `{"name":"John"}` → Pretty print JSON, copy formatted
 
 ### Smart Paste (⌥⌘V)
 
@@ -81,19 +82,21 @@ For advanced features (define, translate, summarize), you'll need a local LLM se
 3. Select your LLM provider
 4. (Optional) Enter a specific model name
 
-## 📝 Content Detection
+## 📝 Content Detection & Actions
 
-Cai intelligently detects:
+Cai intelligently detects content and offers context-aware actions:
 
-| Type           | Examples                                    | Actions                                 |
-| -------------- | ------------------------------------------- | --------------------------------------- |
-| **Word**       | "serendipity", "machine learning"           | Define, Translate, Search               |
-| **Short Text** | "Check out this article"                    | Translate, Search Web, Search Wikipedia |
-| **Long Text**  | Emails, articles (300+ chars)               | Summarize, Translate, Search            |
-| **Meeting**    | "Tuesday at 3pm", "Lunch tomorrow"          | Create Calendar Event, Open in Maps     |
-| **Address**    | "123 Main St, NYC", "Calle Mayor 5, Madrid" | Open in Maps, Copy Formatted            |
-| **URL**        | "https://github.com/..."                    | Open in Browser, Copy as Markdown       |
-| **JSON**       | `{"key": "value"}`                          | Pretty Print, Copy Formatted            |
+| Type           | Examples                                    | Actions                                      |
+| -------------- | ------------------------------------------- | -------------------------------------------- |
+| **Word**       | "serendipity", "photosynthesis"             | Custom Action (⌘1), Define, Explain, Translate, Search |
+| **Short Text** | "quantum computing is revolutionary"        | Custom Action (⌘1), Explain, Translate, Search Web/Wikipedia |
+| **Long Text**  | Emails, articles (100+ chars)               | Custom Action (⌘1), Summarize, Translate, Search |
+| **Meeting**    | "Tuesday at 3pm", "Lunch tomorrow"          | Custom Action (⌘1), Create Calendar Event, Open in Maps |
+| **Address**    | "123 Main St, NYC", "Calle Mayor 5, Madrid" | Custom Action (⌘1), Open in Maps |
+| **URL**        | "https://github.com/..."                    | Custom Action (⌘1), Open in Browser, Copy as Markdown |
+| **JSON**       | `{"key": "value"}`                          | Custom Action (⌘1), Pretty Print |
+
+**Custom Action (⌘1)** is always available and can be configured in preferences to do anything you want (e.g., "Improve writing", "Create email reply", "Count words", "Convert to Python list").
 
 ## ⚙️ Configuration
 
@@ -102,6 +105,8 @@ Access preferences via Raycast Settings → Extensions → Cai:
 - **LLM Provider**: Choose between LM Studio, Ollama, LocalAI, or custom
 - **Custom LLM URL**: For self-hosted or other OpenAI-compatible servers
 - **Model Name**: Specify a particular model (optional)
+- **Translation Language 1 & 2**: Choose your preferred languages for quick translations
+- **Custom Action Prompt**: Set your own AI instruction for the ⌘1 shortcut
 - **Search Engine**: Brave Search (default), DuckDuckGo, Google, Bing, Ecosia
 - **Maps App**: Apple Maps (default) or Google Maps
 
