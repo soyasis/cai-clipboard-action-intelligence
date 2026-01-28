@@ -9,11 +9,23 @@ export default function SmartPaste() {
   const [text, setText] = useState<string>("");
   const [detection, setDetection] = useState<ContentResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [lastClipboard, setLastClipboard] = useState<string>("");
 
   useEffect(() => {
     async function loadClipboard() {
       try {
         const clipboardText = await Clipboard.readText();
+        const newClipboard = clipboardText || "";
+
+        // Only update if clipboard content changed
+        if (newClipboard === lastClipboard) {
+          return;
+        }
+
+        setIsLoading(true);
+        setError(null);
+        setLastClipboard(newClipboard);
+
         if (!clipboardText) {
           setError("Clipboard is empty");
           await showToast({
@@ -29,21 +41,26 @@ export default function SmartPaste() {
         const result = await detectContent(clipboardText);
         setDetection(result);
         setIsLoading(false);
-      } catch (err) {
+      } catch {
         setError("Failed to read clipboard");
         setIsLoading(false);
       }
     }
 
+    // Load clipboard only when component mounts (when user opens Raycast)
     loadClipboard();
-  }, []);
+  }, [lastClipboard]);
 
   if (isLoading) {
     return <List isLoading={true} />;
   }
 
   if (error || !detection) {
-    return <List><List.EmptyView title={error || "Failed to process"} /></List>;
+    return (
+      <List>
+        <List.EmptyView title={error || "Failed to process"} />
+      </List>
+    );
   }
 
   return <ActionList text={text} detection={detection} source="clipboard" />;
