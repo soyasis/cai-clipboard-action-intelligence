@@ -135,13 +135,12 @@ Keep it brief and clear.`;
  * Explain text or concept using the local LLM
  */
 export async function explain(text: string): Promise<string> {
-  const prompt = `Explain "${text}" in a clear and comprehensive way. Include:
+  const prompt = `Explain "${text}" concisely in under 150 words. Include:
 1. What it means or refers to
-2. Context or background (if relevant)
-3. Why it's important or how it's used
-4. A simple example or analogy
+2. Why it's important or how it's used
+3. A brief example if helpful
 
-Make it easy to understand for someone unfamiliar with the concept.`;
+Keep it clear and easy to understand.`;
 
   return generate(prompt);
 }
