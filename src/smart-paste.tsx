@@ -1,28 +1,50 @@
-import { Clipboard, showToast, Toast } from "@raycast/api";
+import { Clipboard, showToast, Toast, List } from "@raycast/api";
+import { useState, useEffect } from "react";
 import { ActionList } from "./components/ActionList";
 import { detectContent } from "./detection";
+import { ContentResult } from "./detection/types";
 
-export default async function SmartPaste() {
-  let text: string;
-  let source: "selection" | "clipboard";
+export default function SmartPaste() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [text, setText] = useState<string>("");
+  const [detection, setDetection] = useState<ContentResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  // Try to get text from clipboard
-  const clipboardText = await Clipboard.readText();
-  if (!clipboardText) {
-    await showToast({
-      style: Toast.Style.Failure,
-      title: "Nothing to process",
-      message: "Clipboard is empty",
-    });
-    return;
+  useEffect(() => {
+    async function loadClipboard() {
+      try {
+        const clipboardText = await Clipboard.readText();
+        if (!clipboardText) {
+          setError("Clipboard is empty");
+          await showToast({
+            style: Toast.Style.Failure,
+            title: "Nothing to process",
+            message: "Clipboard is empty",
+          });
+          setIsLoading(false);
+          return;
+        }
+
+        setText(clipboardText);
+        const result = await detectContent(clipboardText);
+        setDetection(result);
+        setIsLoading(false);
+      } catch (err) {
+        setError("Failed to read clipboard");
+        setIsLoading(false);
+      }
+    }
+
+    loadClipboard();
+  }, []);
+
+  if (isLoading) {
+    return <List isLoading={true} />;
   }
 
-  text = clipboardText;
-  source = "clipboard";
+  if (error || !detection) {
+    return <List><List.EmptyView title={error || "Failed to process"} /></List>;
+  }
 
-  // Detect content type
-  const detection = await detectContent(text);
-
-  // Show UI with actions
-  return <ActionList text={text} detection={detection} source={source} />;
+  return <ActionList text={text} detection={detection} source="clipboard" />;
 }
