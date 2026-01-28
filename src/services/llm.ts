@@ -32,6 +32,14 @@ export interface LLMStatus {
   error?: string;
 }
 
+interface ChatCompletionResponse {
+  choices: Array<{
+    message: {
+      content: string;
+    };
+  }>;
+}
+
 /**
  * Check if the local LLM server is running
  */
@@ -77,7 +85,7 @@ export async function generate(prompt: string): Promise<string> {
     throw new Error(`LLM error: ${response.statusText}`);
   }
 
-  const data = await response.json();
+  const data = (await response.json()) as ChatCompletionResponse;
   return data.choices[0].message.content;
 }
 
