@@ -21,7 +21,14 @@
       "title": "Smart Paste",
       "subtitle": "Get smart actions for clipboard content",
       "description": "Analyzes your clipboard content and suggests relevant actions like creating calendar events, opening maps, translating, summarizing, and more",
-      "mode": "no-view"
+      "mode": "view"
+    },
+    {
+      "name": "smart-select",
+      "title": "Smart Select",
+      "subtitle": "Get smart actions for selected text",
+      "description": "Analyzes selected text and suggests relevant actions like creating calendar events, opening maps, translating, summarizing, and more",
+      "mode": "view"
     }
   ],
   "preferences": [
