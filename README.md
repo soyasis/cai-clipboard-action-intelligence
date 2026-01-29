@@ -1,8 +1,8 @@
 # Cai: Clipboard Action Intelligence
 
-> **Tagline**: Copy anything. Get smart actions.
->
-> **Privacy-first**: 100% local AI processing. Your data never leaves your machine.
+### Copy anything. Get smart actions.
+
+**Privacy-first**: 100% local AI processing. Your data never leaves your machine.
 
 ![Cai Actions Demo](assets/Cai-Demo.gif)
 
@@ -54,10 +54,10 @@ A privacy-friendly, AI-powered clipboard assistant that analyzes copied content 
 
 After installation, set up these shortcuts in Raycast Settings → Extensions → Cai:
 
-| Command          | Recommended Shortcut         | Description               |
-| ---------------- | ---------------------------- | ------------------------- |
-| **Smart Paste**  | `⌥⌘V` (Option + Command + V) | Analyze clipboard content |
-| **Smart Select** | `⌥⌘C` (Option + Command + C) | Analyze selected text     |
+| Command          | Recommended Shortcut | Description               |
+| ---------------- | -------------------- | ------------------------- |
+| **Smart Paste**  | `⌥V` (Option + V)    | Analyze clipboard content |
+| **Smart Select** | `⌥C` (Option + C)    | Analyze selected text     |
 
 **To set shortcuts:**
 
