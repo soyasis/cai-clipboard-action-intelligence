@@ -19,7 +19,7 @@ export async function createCalendarEvent(text: string, detection: ContentResult
   const title = extractEventTitle(text) || "Event";
 
   // Use Google Calendar for better pre-filling support
-  const gcalUrl = buildGoogleCalendarUrl(title, date, location);
+  const gcalUrl = buildGoogleCalendarUrl(title, date, location, text);
   await open(gcalUrl);
 
   await showToast({
@@ -29,32 +29,60 @@ export async function createCalendarEvent(text: string, detection: ContentResult
   });
 }
 
-function extractEventTitle(text: string): string | undefined {
-  // Try common patterns
+function extractEventTitle(text: string): string {
+  // Remove common time and location indicators to clean up the title
+  let cleaned = text
+    // Remove date/time patterns
+    .replace(/\b(?:on|at)?\s*(?:tomorrow|today|tonight|monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b/gi, "")
+    .replace(/\b(?:next|this)\s+(?:week|month|monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b/gi, "")
+    .replace(/\bat\s+\d{1,2}(?::\d{2})?\s*(?:am|pm)?\b/gi, "")
+    .replace(/\b\d{1,2}(?::\d{2})?\s*(?:am|pm)\b/gi, "")
+    // Remove location patterns
+    .replace(/\bat\s+(?:the\s+)?[A-Z][^.!?]*$/i, "")
+    .replace(/\bin\s+(?:the\s+)?[A-Z][^.!?]*$/i, "")
+    .trim();
+
+  // Try to extract meaningful subjects from common meeting patterns
   const patterns = [
-    /(?:meeting|call|sync|chat)\s+(?:about|re:?|for|on)\s+(.+?)(?:\s+(?:on|at|tomorrow|next))/i,
-    /(?:let's|lets)\s+(?:sync|meet|chat|discuss)\s+(?:about|on|re:?)?\s*(.+?)(?:\s+(?:on|at|tomorrow))/i,
+    /(?:meeting|call|sync|chat)\s+(?:about|re:?|for|on)\s+(.+)/i,
+    /(?:discuss|talk about|review)\s+(?:the\s+)?(.+)/i,
+    /(?:let's|lets)\s+(?:sync|meet|chat|discuss)\s+(?:about|on|re:?)?\s*(.+)/i,
   ];
 
   for (const pattern of patterns) {
-    const match = text.match(pattern);
-    if (match) return match[1].trim().slice(0, 50);
+    const match = cleaned.match(pattern);
+    if (match && match[1].trim()) {
+      const title = match[1].trim();
+      return title.length > 50 ? title.slice(0, 47) + "..." : title;
+    }
   }
 
-  // Fallback: use first few words
-  const words = text.split(/\s+/).slice(0, 5).join(" ");
-  return words.length > 50 ? words.slice(0, 47) + "..." : words;
+  // If still too generic, just use "Meeting"
+  if (cleaned.length < 3 || /^(let'?s?\s*)?(meet|sync|call|chat)$/i.test(cleaned)) {
+    return "Meeting";
+  }
+
+  // Fallback: use cleaned text, limit to reasonable length
+  return cleaned.length > 50 ? cleaned.slice(0, 47) + "..." : cleaned || "Meeting";
 }
 
-function buildGoogleCalendarUrl(title: string, date: Date, location?: string): string {
+function buildGoogleCalendarUrl(title: string, date: Date, location?: string, originalText?: string): string {
   const formatDate = (d: Date) => d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
 
   const endDate = new Date(date.getTime() + 60 * 60 * 1000); // +1 hour
+
+  // Build description with original text
+  let description = "";
+  if (originalText) {
+    description = `"${originalText}"\n\n`;
+  }
+  description += "Created with Cai, a Raycast extension for intelligent clipboard actions.";
 
   const params = new URLSearchParams({
     action: "TEMPLATE",
     text: title,
     dates: `${formatDate(date)}/${formatDate(endDate)}`,
+    details: description,
   });
 
   if (location) params.set("location", location);
