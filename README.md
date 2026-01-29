@@ -23,21 +23,20 @@ A privacy-friendly, AI-powered clipboard assistant that analyzes copied content 
 
 ### Word Detection & Definition
 
+<img src="assets/Cai-wordActions.png" width="450" alt="Word Definition">
 <img src="assets/Cai-wordDefinition.png" width="450" alt="Word Definition">
 
-### Text Actions
+### Text & Custom Actions
 
 <img src="assets/Cai-textActions.png" width="450" alt="Text Actions">
-
-### Custom Action
-
 <img src="assets/Cai-customAction.png" width="450" alt="Custom Action">
+<img src="assets/Cai-customActionResponse.png" width="450" alt="Custom Action">
 
 ### Datetime and Location Actions
 
 <img src="assets/Cai-datetimeActions.png" width="450" alt="Datetime Actions">
-<img src="assets/Cai-datetimeActions-1.png" width="450" alt="Datetime Actions with Location">
 <img src="assets/Cai-calendarAction.png" width="450" alt="Create Calendar Event">
+<img src="assets/Cai-mapsAction.png" width="450" alt="Create Calendar Event">
 
 ## 📦 Installation
 
