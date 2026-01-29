@@ -11,7 +11,7 @@ export function ResultView({ title, content }: Props) {
       markdown={`# ${title}\n\n${content}`}
       actions={
         <ActionPanel>
-          <Action.CopyToClipboard content={content} title="Copy to Clipboard" onCopy={popToRoot} />
+          <Action.CopyToClipboard content={content} title="Copy to Clipboard" onCopy={() => popToRoot()} />
           <Action title="Close" onAction={popToRoot} shortcut={{ modifiers: ["cmd"], key: "w" }} />
         </ActionPanel>
       }
