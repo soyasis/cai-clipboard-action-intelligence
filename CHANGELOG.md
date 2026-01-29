@@ -1,6 +1,6 @@
 # Cai: Clipboard Action Intelligence Changelog
 
-## [Initial Release] - 2026-01-29
+## [Initial Release] - {PR_MERGE_DATE}
 
 ### Features
 
