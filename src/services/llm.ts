@@ -6,6 +6,12 @@ const PROVIDER_URLS: Record<string, string> = {
   ollama: "http://127.0.0.1:11434/v1",
   localai: "http://127.0.0.1:8080/v1",
   textgen: "http://127.0.0.1:5000/v1",
+  jan: "http://127.0.0.1:1337/v1",
+  vllm: "http://127.0.0.1:8000/v1",
+  anythingllm: "http://127.0.0.1:3001/v1",
+  msty: "http://127.0.0.1:10002/v1",
+  openwebui: "http://127.0.0.1:8080/v1",
+  gpt4all: "http://127.0.0.1:4891/v1",
 };
 
 /**

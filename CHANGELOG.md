@@ -14,17 +14,28 @@
 - Two commands: Smart Select (⌥C) and Smart Paste (⌥V)
 - Privacy-first design: all AI processing happens locally on your machine, no cloud required
 
-### Supported LLM Providers
+### Supported LLM Providers (11 total)
 
 - LM Studio
 - Ollama
+- Jan AI
 - LocalAI
-- text-generation-webui
+- vLLM
+- Text Generation Web UI
+- Anything LLM
+- Msty AI
+- Open WebUI
+- GPT4All
 - Custom OpenAI-compatible servers
 
 ### Technical Improvements
 
 - Race condition fix for content type detection to prevent stale state updates
 - Async cancellation pattern to prevent memory leaks
-- Improved calendar event title extraction with pattern matching
-- Enhanced location extraction to capture full venue names (e.g., "Cafe La Palma" instead of just "La Palma")
+- European time format support (14h → 14:00) for natural language date parsing
+- Smart date/time merging (e.g., "tomorrow at 14h" correctly combines date and time)
+- Improved calendar event title extraction with pattern matching and generic phrase detection
+- Enhanced location extraction to capture full venue names with prioritized place name detection
+- JSON detection with trailing comma support (common when copying from code)
+- Pretty Print JSON with preview window (similar to AI actions)
+- Translation defaults: English and Spanish

@@ -56,12 +56,36 @@
           "value": "ollama"
         },
         {
+          "title": "Jan AI",
+          "value": "jan"
+        },
+        {
           "title": "LocalAI",
           "value": "localai"
         },
         {
-          "title": "text-generation-webui",
+          "title": "vLLM",
+          "value": "vllm"
+        },
+        {
+          "title": "Text Generation Web UI",
           "value": "textgen"
+        },
+        {
+          "title": "Anything LLM",
+          "value": "anythingllm"
+        },
+        {
+          "title": "Msty AI",
+          "value": "msty"
+        },
+        {
+          "title": "Open WebUI",
+          "value": "openwebui"
+        },
+        {
+          "title": "GPT4All",
+          "value": "gpt4all"
         },
         {
           "title": "Custom",

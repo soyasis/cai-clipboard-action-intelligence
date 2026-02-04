@@ -1,6 +1,6 @@
 # Cai: local clipboard AI
 
-### Copy anything. Get smart actions.
+### Select any text. Get smart actions.
 
 **Official website: [getcai.app](getcai.app)**
 
@@ -76,8 +76,15 @@ For advanced features (define, translate, summarize), you'll need a local LLM se
 | ------------------------- | --------------------------- | ------------------------------------------------------------ |
 | **LM Studio**             | `http://127.0.0.1:1234/v1`  | [Download](https://lmstudio.ai/) → Load model → Start server |
 | **Ollama**                | `http://127.0.0.1:11434/v1` | [Install](https://ollama.ai/) → `ollama serve`               |
+| **Jan AI**                | `http://127.0.0.1:1337/v1`  | [Download](https://jan.ai/) → Load model → Start server      |
 | **LocalAI**               | `http://127.0.0.1:8080/v1`  | [Setup guide](https://localai.io/)                           |
-| **text-generation-webui** | `http://127.0.0.1:5000/v1`  | Enable OpenAI extension                                      |
+| **vLLM**                  | `http://127.0.0.1:8000/v1`  | [Install](https://docs.vllm.ai/) → Start server with OpenAI API |
+| **Text Generation Web UI** | `http://127.0.0.1:5000/v1`  | [Install](https://github.com/oobabooga/text-generation-webui) → Enable OpenAI extension |
+| **Anything LLM**          | `http://127.0.0.1:3001/v1`  | [Download](https://anythingllm.com/) → Enable API            |
+| **Msty AI**               | `http://127.0.0.1:10002/v1` | [Download](https://msty.app/) → Start server                 |
+| **Open WebUI**            | `http://127.0.0.1:8080/v1`  | [Install](https://openwebui.com/) → Enable OpenAI API        |
+| **GPT4All**               | `http://127.0.0.1:4891/v1`  | [Download](https://gpt4all.io/) → Enable API server          |
+| **Custom**                | User-defined                | Any OpenAI-compatible server                                 |
 
 **To configure:**
 
@@ -106,7 +113,7 @@ Cai intelligently detects content and offers context-aware actions:
 
 Access preferences via Raycast Settings → Extensions → Cai:
 
-- **LLM Provider**: Choose between LM Studio, Ollama, LocalAI, or custom
+- **LLM Provider**: Choose from 11 local LLM providers or use any OpenAI-compatible server
 - **Custom LLM URL**: For self-hosted or other OpenAI-compatible servers
 - **Model Name**: Specify a particular model (optional)
 - **Translation Language 1 & 2**: Choose your preferred languages for quick translations
