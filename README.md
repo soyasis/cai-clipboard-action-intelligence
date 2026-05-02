@@ -1,3 +1,18 @@
+# Cai (Raycast extension) — Archived
+
+This was the original Raycast extension that sat in Raycast's review queue
+for 3+ months. While waiting, I built [Cai](https://getcai.app) as a 
+native macOS app instead — same idea, but free, MIT, with a bundled local
+model and zero account required.
+
+→ Get the real thing: https://getcai.app
+→ Source: https://github.com/cai-layer/cai
+
+This repo is archived for historical reference. No new development.
+
+---
+---
+
 # Cai: local clipboard AI
 
 ### Select any text. Get smart actions.
